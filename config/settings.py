@@ -1,12 +1,15 @@
 import os
 from datetime import timedelta
 from pathlib import Path
+import socket
 
 from dotenv import load_dotenv
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 load_dotenv()
+
+INTERNAL_IPS = ['127.0.0.1', 'localhost']
 
 SECRET_KEY = os.getenv("SECRET_KEY")
 
@@ -58,6 +61,8 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "config.wsgi.application"
 
+CORS_ALLOW_ALL_ORIGINS = True
+
 REST_FRAMEWORK = {
     "DEFAULT_FILTER_BACKENDS": [
         "django_filters.rest_framework.DjangoFilterBackend",
@@ -106,7 +111,7 @@ USE_I18N = True
 USE_TZ = True
 
 STATIC_URL = "/static/"
-STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
+STATICFILES_DIRS = [ BASE_DIR / "static"]
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
 MEDIA_URL = "/media/"
@@ -135,4 +140,17 @@ LOGGING = {
             'handlers': ['console'],
         },
     },
+}
+
+SWAGGER_YASG_SETTINGS = {
+    'USE_SESSION_AUTH': False,
+    'SECURITY_DEFINITIONS': {
+        'Bearer': {
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in': 'header'
+        }
+    },
+    # КЛЮЧЕВАЯ НАСТРОЙКА:
+    'DEFAULT_API_URL': 'http://localhost/',  # или ваш реальный домен
 }

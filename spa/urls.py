@@ -1,4 +1,4 @@
-# from django.urls import path
+from django.urls import path, include
 from rest_framework.routers import SimpleRouter
 
 from spa.apps import SpaConfig
@@ -8,4 +8,6 @@ app_name = SpaConfig.name
 
 router = SimpleRouter()
 router.register(r"table", TableRowViewSet, basename="table")
-urlpatterns = router.urls
+urlpatterns = [
+    path('', include(router.urls)),
+]

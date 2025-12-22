@@ -1,80 +1,55 @@
-name: project
+version: '3.8'
+
 services:
-  web:
-    restart: always
-    image: ${DOCKER_HUB_USERNAME}/web:latest
-    env_file:
-      - .env
-    ports:
-      - "8000:8000"
-    volumes:
-      - static_volume:/app/staticfiles
-      - media_volume:/app/media
-    depends_on:
-      - db
-      - redis
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/"]
-      interval: 30s
-      timeout: 10s
-      retries: 5
-
-  nginx:
-    restart: always
-    image: ${DOCKER_HUB_USERNAME}/nginx:latest
-    env_file:
-      - .env
-    ports:
-      - "80:80"
-    volumes:
-      - static_volume:/app/staticfiles
-    depends_on:
-      - web
-
-  db:
-    restart: always
-    image: postgres:16
-    env_file:
-      - .env
+  postgres:
+    image: postgres:15-alpine
+    env_file: .env  # ← ВСЕ переменные берутся отсюда
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U postgres || pg_isready -U $${POSTGRES_USER}" ]
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER}"]
       interval: 10s
       timeout: 5s
       retries: 5
+    restart: unless-stopped
 
-  redis:
-    restart: always
-    image: redis:7-alpine
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    env_file: .env  # ← Все переменные отсюда
     volumes:
-      - redis_data:/data
-
-  celery:
-    restart: always
-    image: ${DOCKER_HUB_USERNAME}/web:latest
-    env_file:
-      - .env
-    command: celery -A config worker -l INFO
+      - .:/app
+      - static_volume:/app/staticfiles
+    ports:
+      - "8000:8000"
     depends_on:
-      db:
+      postgres:
         condition: service_healthy
-      redis:
-        condition: service_started
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/spa/table/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    restart: unless-stopped
 
-  celery_beat:
-    restart: always
-    image: ${DOCKER_HUB_USERNAME}/web:latest
-    env_file:
-      - .env
-    command: celery -A config beat -l INFO
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile.nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - static_volume:/app/staticfiles:ro
     depends_on:
-      - db
-      - redis
-      - celery
+      backend:
+        condition: service_healthy
+    restart: unless-stopped
 
 volumes:
   postgres_data:
-  redis_data:
+    driver: local
   static_volume:
-  media_volume:
+    driver: local
