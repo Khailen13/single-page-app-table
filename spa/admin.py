@@ -14,12 +14,14 @@ class TableRowAdmin(admin.ModelAdmin):
     )
 
     list_filter = [
-        'date',
-        'name',
-        'quantity',
-        'distance',
+        "date",
+        "name",
+        "quantity",
+        "distance",
     ]
 
-    search_fields = ['name',]
+    search_fields = [
+        "name",
+    ]
 
-    ordering = ['-date']
+    ordering = ["-date"]

@@ -9,5 +9,5 @@ app_name = SpaConfig.name
 router = SimpleRouter()
 router.register(r"table", TableRowViewSet, basename="table")
 urlpatterns = [
-    path('', include(router.urls)),
+    path("", include(router.urls)),
 ]

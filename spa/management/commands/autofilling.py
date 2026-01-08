@@ -34,12 +34,12 @@ class Command(BaseCommand):
             date = timezone.now().date() - timezone.timedelta(days=days_ago)
 
             # Случайное название
-            fake = Faker('ru_RU')
+            fake = Faker("ru_RU")
             name = self.generate_expedition_name(fake)
 
             # Случайные значения
-            distance = random.randint(50,500) # Расстояние 50 - 500 км
-            quantity = distance // 50 # Количество дней при средней скорости 50 км/день
+            distance = random.randint(50, 500)  # Расстояние 50 - 500 км
+            quantity = distance // 50  # Количество дней при средней скорости 50 км/день
 
             TableRow.objects.create(
                 date=date, name=name, quantity=quantity, distance=distance

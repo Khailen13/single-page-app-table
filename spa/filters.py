@@ -3,8 +3,10 @@ from .models import TableRow
 
 
 class TableRowFilter(django_filters.FilterSet):
-    name = django_filters.CharFilter(lookup_expr='exact')  # равно
-    name__icontains = django_filters.CharFilter(field_name='name', lookup_expr='icontains')
+    name = django_filters.CharFilter(lookup_expr="exact")  # равно
+    name__icontains = django_filters.CharFilter(
+        field_name="name", lookup_expr="icontains"
+    )
 
     quantity = django_filters.NumberFilter()
     quantity__gt = django_filters.NumberFilter(field_name="quantity", lookup_expr="gt")
