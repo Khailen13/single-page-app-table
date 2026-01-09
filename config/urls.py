@@ -23,7 +23,6 @@ urlpatterns = [
     path("", lambda request: redirect("swagger/")),
     path("admin/", admin.site.urls),
     path("spa/", include("spa.urls", namespace="spa")),
-    # path("users/", include("users.urls", namespace="users")),
     path(
         "swagger/",
         schema_view.with_ui("swagger", cache_timeout=0),

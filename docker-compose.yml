@@ -1,9 +1,8 @@
-version: '3.8'
-
+# УДАЛИТЬ первую строку с version
 services:
   postgres:
     image: postgres:15-alpine
-    env_file: .env  # ← ВСЕ переменные берутся отсюда
+    env_file: .env
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
@@ -17,12 +16,12 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.backend
-    env_file: .env  # ← Все переменные отсюда
+    env_file: .env
     volumes:
       - .:/app
       - static_volume:/app/staticfiles
     ports:
-      - "8000:8000"
+      - "8000:8000"  # ← ОСТАВЬТЕ для прямого доступа к API
     depends_on:
       postgres:
         condition: service_healthy
@@ -46,6 +45,12 @@ services:
     depends_on:
       backend:
         condition: service_healthy
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.frontend
     restart: unless-stopped
 
 volumes:

@@ -1,5 +1,7 @@
+# nginx/Dockerfile.nginx
 FROM nginx:alpine
 
+# Копируем существующий конфиг (nginx.conf, а не nginx-proxy.conf)
 COPY nginx.conf /etc/nginx/nginx.conf
 
 RUN mkdir -p /app/staticfiles && \

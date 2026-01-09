@@ -1,4 +1,9 @@
-export default function SortableHeader({ field, label, sortConfig, onSortClick }) {
+export default function SortableHeader({
+  field,
+  label,
+  sortConfig,
+  onSortClick,
+}) {
   const getIcon = () => {
     if (!sortConfig || sortConfig.field !== field)
       return <i className="bi bi-arrows-vertical"></i>;
@@ -6,6 +11,7 @@ export default function SortableHeader({ field, label, sortConfig, onSortClick }
       return <i className="bi bi-sort-down-alt"></i>;
     return <i className="bi bi-sort-down"></i>;
   };
+
   return (
     <th
       scope="col"

@@ -1,6 +1,10 @@
 import { useState } from "react";
 
-export default function SimplePagination({ pagination, setPagination, totalItems }) {
+export default function SimplePagination({
+  pagination,
+  setPagination,
+  totalItems,
+}) {
   const [pageInput, setPageInput] = useState("");
   const totalPages = Math.ceil(totalItems / pagination.itemsPerPage);
 
