@@ -1,4 +1,5 @@
 import os
+import sys
 from datetime import timedelta
 from pathlib import Path
 import socket
@@ -15,7 +16,7 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 
 DEBUG = True if os.getenv("DEBUG") == "True" else False
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = ["localhost", "127.0.0.1", "backend"]
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -62,13 +63,15 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "config.wsgi.application"
 
-CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_ALL_ORIGINS = False
 
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",  # React dev server
     "http://localhost:8000",  # Django dev server
+    "http://localhost",  # для Nginx
 ]
+
 CORS_ALLOW_METHODS = [
     "DELETE",
     "GET",
@@ -136,7 +139,7 @@ USE_I18N = True
 
 USE_TZ = True
 
-STATIC_URL = "/static/"
+STATIC_URL = "/django-static/"
 STATICFILES_DIRS = [BASE_DIR / "static"]
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
@@ -171,6 +174,41 @@ SWAGGER_YASG_SETTINGS = {
     "SECURITY_DEFINITIONS": {
         "Bearer": {"type": "apiKey", "name": "Authorization", "in": "header"}
     },
-    # КЛЮЧЕВАЯ НАСТРОЙКА:
-    "DEFAULT_API_URL": "http://localhost/",  # или ваш реальный домен
+    "DEFAULT_API_URL": "http://localhost/",
 }
+
+SWAGGER_USE_COMPAT_RENDERERS = False
+
+if "test" in sys.argv or "test_coverage" in sys.argv:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "test_db.sqlite3",
+            "TEST": {
+                "NAME": BASE_DIR / "test_db.sqlite3",
+            },
+        }
+    }
+
+
+
+def is_running_tests():
+    if "test" in sys.argv:
+        return True
+
+    if hasattr(sys, "_called_from_test"):
+        return True
+
+    if any("pytest" in arg or "coverage" in arg for arg in sys.argv):
+        return True
+
+    return False
+
+
+if is_running_tests():
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "test_db.sqlite3",
+        }
+    }

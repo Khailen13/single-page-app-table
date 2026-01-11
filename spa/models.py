@@ -5,7 +5,7 @@ class TableRow(models.Model):
     date = models.DateField(verbose_name="Дата")
     name = models.CharField(max_length=300, verbose_name="Название")
     quantity = models.SmallIntegerField(verbose_name="Количество")
-    distance = models.SmallIntegerField(verbose_name="Расстояние")
+    distance = models.IntegerField(verbose_name="Расстояние")
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
 
     class Meta:
