@@ -228,7 +228,7 @@ class TestTableRowPaginationAPI:
 
     def test_pagination_default_size(self):
         """Пагинация по умолчанию (10 записей)."""
-        # Создаем 15 записей
+
         for i in range(15):
             TableRow.objects.create(
                 date=f"2025-01-{i + 1:02d}",
@@ -239,12 +239,13 @@ class TestTableRowPaginationAPI:
 
         response = self.client.get(self.list_url)
         assert response.status_code == 200
-        assert len(response.data["results"]) == 10  # page_size по умолчанию
+        assert len(response.data["results"]) == 10
         assert response.data["count"] == 15
         assert response.data["next"] is not None
 
     def test_pagination_custom_page_size(self):
         """Пагинация с кастомным размером страницы."""
+
         for i in range(15):
             TableRow.objects.create(
                 date=f"2025-01-{i + 1:02d}",

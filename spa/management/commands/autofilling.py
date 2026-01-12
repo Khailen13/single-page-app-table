@@ -8,7 +8,6 @@ from faker import Faker
 class Command(BaseCommand):
     help = "Заполняет базу тестовыми данными для демонстрации"
 
-    # Добавляем аргументы командной строки
     def add_arguments(self, parser):
         parser.add_argument(
             "--count",
@@ -58,7 +57,7 @@ class Command(BaseCommand):
         templates = [
             f"Экспедиция «{fake.word().capitalize()}» в {fake.country()}",
             f"Треккинг по {fake.region()} с {fake.company()}",
-            f"Научно-исследовательская миссия: {fake.catch_phrase()}",
-            f"{fake.city()} - {fake.city()} через {fake.word()}",
+            f"Турпоход: {fake.catch_phrase()}",
+            f"Маршрут {fake.city()} - {fake.city()}",
         ]
         return random.choice(templates)

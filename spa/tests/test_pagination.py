@@ -4,6 +4,7 @@ from spa.pagination import TableRowPagination
 
 def test_pagination_basics():
     """Проверка атрибутов пагинации."""
+
     pagination = TableRowPagination()
 
     assert pagination.page_size == 10
@@ -13,4 +14,5 @@ def test_pagination_basics():
 
 def test_inheritance():
     """Проверка наследования."""
+
     assert issubclass(TableRowPagination, PageNumberPagination)

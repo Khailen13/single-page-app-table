@@ -191,7 +191,6 @@ if "test" in sys.argv or "test_coverage" in sys.argv:
     }
 
 
-
 def is_running_tests():
     if "test" in sys.argv:
         return True

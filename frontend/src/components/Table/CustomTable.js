@@ -1,6 +1,6 @@
 import SimplePagination from "../Pagination/SimplePagination.js";
 import SortableHeader from "./SortableHeader.js";
-import formatDate from "../../utils/formatters.js"; // Исправил путь
+import formatDate from "../../utils/formatters.js";
 
 export default function CustomTable({
   data,
@@ -10,8 +10,6 @@ export default function CustomTable({
   totalItems,
   sortConfig,
 }) {
-  // data уже содержит только данные для текущей страницы (пришли с сервера)
-  // Не нужно делать slice на клиенте!
 
   return (
     <>

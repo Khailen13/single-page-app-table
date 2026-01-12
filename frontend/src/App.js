@@ -5,22 +5,20 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 
 import { useState, useEffect } from "react";
 
-import api from "./utils/api"; // Добавьте этот импорт
+import api from "./utils/api";
 import SimplePagination from "./components/Pagination/SimplePagination.js";
 import FilterPanel from "./components/Filters/FilterPanel.js";
 import CustomTable from "./components/Table/CustomTable.js";
 
 function App() {
-  // Состояния для данных от сервера
   const [serverData, setServerData] = useState({ results: [], count: 0 });
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // Состояния для UI
   const [sortConfig, setSortConfig] = useState({
     field: null,
     direction: "asc",
-  }); // Добавьте это
+  });
   const [tempFilters, setTempFilters] = useState({
     column: "",
     condition: "",
@@ -36,7 +34,6 @@ function App() {
     itemsPerPage: 5,
   });
 
-  // Функция для преобразования фильтров в формат Django
   const getDjangoFilterParams = (filters) => {
     if (!filters.column || !filters.condition || !filters.value) {
       return {};
@@ -44,12 +41,10 @@ function App() {
 
     const { column, condition, value } = filters;
 
-    // Для exact сравнения Django обычно не требует суффикса
     if (condition === "equals") {
-      return { [column]: value }; // Просто field=value
+      return { [column]: value };
     }
 
-    // Для остальных условий
     const suffixMap = {
       contains: "__icontains",
       greater: "__gt",
@@ -62,19 +57,16 @@ function App() {
     return { [`${column}${suffix}`]: value };
   };
 
-  // Функция загрузки данных
   const fetchTableData = async () => {
     setIsLoading(true);
     setError(null);
 
     try {
-      // Формируем параметры запроса
       const params = {
         page: pagination.currentPage,
         page_size: pagination.itemsPerPage,
       };
 
-      // Добавляем сортировку если есть
       if (sortConfig.field) {
         params.ordering =
           sortConfig.direction === "desc"
@@ -82,11 +74,9 @@ function App() {
             : sortConfig.field;
       }
 
-      // Добавляем фильтры
       const filterParams = getDjangoFilterParams(appliedFilters);
       Object.assign(params, filterParams);
 
-      // ДЛЯ ОТЛАДКИ: выводим полный URL
       const fullUrl = `http://localhost/spa/table/?${new URLSearchParams(params).toString()}`;
       console.log("Пробую загрузить данные по адресу:", fullUrl);
 
@@ -106,7 +96,6 @@ function App() {
     }
   };
 
-  // Эффект для загрузки данных при изменении параметров
   useEffect(() => {
     fetchTableData();
   }, [
@@ -116,7 +105,6 @@ function App() {
     appliedFilters,
   ]);
 
-  // Обработчики
   const resetPagination = () => {
     setPagination((prev) => ({ ...prev, currentPage: 1 }));
   };
@@ -149,14 +137,13 @@ function App() {
     resetPagination();
   };
 
-  // Первый запрос при монтировании
   useEffect(() => {
     fetchTableData();
   }, []);
 
   return (
     <div className="container mt-4">
-      <h2 className="text-center"> Экспедиции </h2>
+      <h2 className="text-center mb-3"> Туристические экспедиции </h2>
       {isLoading && (
         <div className="text-center my-4">
           <div className="spinner-border text-primary" role="status">
@@ -193,7 +180,7 @@ function App() {
           setPagination={setPagination}
           onSortClick={handleSort}
           totalItems={serverData.count}
-          sortConfig={sortConfig} // Передаем sortConfig для отображения иконок
+          sortConfig={sortConfig}
         />
       )}
     </div>

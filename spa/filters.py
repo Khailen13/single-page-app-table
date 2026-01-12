@@ -1,6 +1,8 @@
 import django_filters
 from django.core.exceptions import ValidationError
 from .models import TableRow
+from rest_framework.filters import OrderingFilter
+from django.db.models.functions import Lower
 
 
 def validate_positive_integer(value):
@@ -107,3 +109,23 @@ class TableRowFilter(django_filters.FilterSet):
             "distance": ["exact", "gt", "lt"],
             "date": ["exact", "gt", "lt"],
         }
+
+
+class CaseInsensitiveOrderingFilter(OrderingFilter):
+    def filter_queryset(self, request, queryset, view):
+        ordering = self.get_ordering(request, queryset, view)
+
+        if ordering:
+            new_ordering = []
+            for field in ordering:
+                if field.lstrip('-') == 'name':
+                    if field.startswith('-'):
+                        new_ordering.append(Lower('name').desc())
+                    else:
+                        new_ordering.append(Lower('name').asc())
+                else:
+                    new_ordering.append(field)
+
+            return queryset.order_by(*new_ordering)
+
+        return queryset
