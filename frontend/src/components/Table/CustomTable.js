@@ -10,44 +10,47 @@ export default function CustomTable({
   totalItems,
   sortConfig,
 }) {
-
   return (
     <>
-      <table className="table table-dark table-striped text-center">
-        <thead>
-          <tr>
-            <th scope="col">Дата</th>
-            <SortableHeader
-              field="name"
-              label="Название"
-              sortConfig={sortConfig}
-              onSortClick={onSortClick}
-            />
-            <SortableHeader
-              field="quantity"
-              label="Количество"
-              sortConfig={sortConfig}
-              onSortClick={onSortClick}
-            />
-            <SortableHeader
-              field="distance"
-              label="Расстояние"
-              sortConfig={sortConfig}
-              onSortClick={onSortClick}
-            />
-          </tr>
-        </thead>
-        <tbody>
-          {data.map((item) => (
-            <tr key={item.id}>
-              <td>{formatDate(item.date)}</td>
-              <td>{item.name}</td>
-              <td>{item.quantity}</td>
-              <td>{item.distance}</td>
+      <div className="rounded-4 overflow-hidden border">
+        <table className="table table-light table-striped text-center fixed-columns-table rounded-4">
+          <thead>
+            <tr>
+              <th scope="col" className="align-middle">
+                Дата начала
+              </th>
+              <SortableHeader
+                field="name"
+                label="Название"
+                sortConfig={sortConfig}
+                onSortClick={onSortClick}
+              />
+              <SortableHeader
+                field="quantity"
+                label="Количество дней"
+                sortConfig={sortConfig}
+                onSortClick={onSortClick}
+              />
+              <SortableHeader
+                field="distance"
+                label="Расстояние, км"
+                sortConfig={sortConfig}
+                onSortClick={onSortClick}
+              />
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {data.map((item) => (
+              <tr key={item.id}>
+                <td>{formatDate(item.date)}</td>
+                <td>{item.name}</td>
+                <td>{item.quantity}</td>
+                <td>{item.distance}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
 
       <SimplePagination
         pagination={pagination}

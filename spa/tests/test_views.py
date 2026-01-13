@@ -1,8 +1,8 @@
 import pytest
-from django.core.exceptions import ValidationError
+from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APIClient
-from django.urls import reverse
+
 from spa.models import TableRow
 
 

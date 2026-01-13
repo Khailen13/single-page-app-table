@@ -1,5 +1,5 @@
 import pytest
-import os
+
 from spa.models import TableRow
 
 

@@ -3,6 +3,7 @@ export default function SortableHeader({
   label,
   sortConfig,
   onSortClick,
+  className = "",
 }) {
   const getIcon = () => {
     if (!sortConfig || sortConfig.field !== field)
@@ -15,6 +16,7 @@ export default function SortableHeader({
   return (
     <th
       scope="col"
+      className={`align-middle text-center ${className}`}
       onClick={() => onSortClick(field)}
       style={{ cursor: "pointer" }}
     >

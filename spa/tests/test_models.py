@@ -1,5 +1,6 @@
-from spa.models import TableRow
 import pytest
+
+from spa.models import TableRow
 
 
 @pytest.mark.django_db

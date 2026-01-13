@@ -1,8 +1,10 @@
 import random
+
 from django.core.management.base import BaseCommand
 from django.utils import timezone
-from spa.models import TableRow
 from faker import Faker
+
+from spa.models import TableRow
 
 
 class Command(BaseCommand):

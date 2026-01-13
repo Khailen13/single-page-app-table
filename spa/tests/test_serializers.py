@@ -1,6 +1,7 @@
+import pytest
+
 from spa.models import TableRow
 from spa.serializers import TableRowSerializer
-import pytest
 
 
 @pytest.mark.django_db

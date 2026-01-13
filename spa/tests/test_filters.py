@@ -1,6 +1,7 @@
 import pytest
 from django.core.exceptions import ValidationError
 from django_filters import FilterSet
+
 from spa.filters import TableRowFilter
 from spa.models import TableRow
 

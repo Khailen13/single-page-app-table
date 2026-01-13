@@ -1,8 +1,9 @@
 import django_filters
 from django.core.exceptions import ValidationError
-from .models import TableRow
-from rest_framework.filters import OrderingFilter
 from django.db.models.functions import Lower
+from rest_framework.filters import OrderingFilter
+
+from .models import TableRow
 
 
 def validate_positive_integer(value):
@@ -118,11 +119,11 @@ class CaseInsensitiveOrderingFilter(OrderingFilter):
         if ordering:
             new_ordering = []
             for field in ordering:
-                if field.lstrip('-') == 'name':
-                    if field.startswith('-'):
-                        new_ordering.append(Lower('name').desc())
+                if field.lstrip("-") == "name":
+                    if field.startswith("-"):
+                        new_ordering.append(Lower("name").desc())
                     else:
-                        new_ordering.append(Lower('name').asc())
+                        new_ordering.append(Lower("name").asc())
                 else:
                     new_ordering.append(field)
 

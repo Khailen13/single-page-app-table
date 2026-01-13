@@ -17,17 +17,21 @@ export default function formatDate(dateString) {
     }
 
     if (!date) {
+      if (dateString.length <= 5 && /^\d+$/.test(dateString)) {
+        console.warn("Невалидная дата:", dateString);
+        return "—";
+      }
       date = new Date(dateString);
     }
 
     if (!date || isNaN(date.getTime())) {
-      console.warn('Невалидная дата:', dateString);
+      console.warn("Невалидная дата:", dateString);
       return "—";
     }
 
     return date.toLocaleDateString("ru-RU");
   } catch (error) {
-    console.warn('Ошибка парсинга даты:', dateString, error);
+    console.warn("Ошибка парсинга даты:", dateString, error);
     return "—";
   }
 }

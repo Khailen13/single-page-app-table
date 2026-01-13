@@ -1,11 +1,10 @@
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.viewsets import ModelViewSet
-from rest_framework.filters import OrderingFilter
 
-from spa.filters import TableRowFilter, CaseInsensitiveOrderingFilter
+from spa.filters import CaseInsensitiveOrderingFilter, TableRowFilter
 from spa.models import TableRow
-from spa.serializers import TableRowSerializer
 from spa.pagination import TableRowPagination
+from spa.serializers import TableRowSerializer
 
 
 class TableRowViewSet(ModelViewSet):

@@ -36,3 +36,66 @@
     transform: rotate(360deg);
   }
 }
+
+/* Таблица с фиксированными колонками */
+.fixed-columns-table {
+  table-layout: fixed;
+  width: 100%;
+}
+
+.fixed-columns-table thead th:nth-child(1),
+.fixed-columns-table tbody td:nth-child(1) {
+  width: 16.67%; /* 2/12 */
+}
+
+.fixed-columns-table thead th:nth-child(2),
+.fixed-columns-table tbody td:nth-child(2) {
+  width: 50%; /* 6/12 */
+}
+
+.fixed-columns-table thead th:nth-child(3),
+.fixed-columns-table tbody td:nth-child(3) {
+  width: 16.67%; /* 2/12 */
+}
+
+.fixed-columns-table thead th:nth-child(4),
+.fixed-columns-table tbody td:nth-child(4) {
+  width: 16.67%; /* 2/12 */
+}
+
+/* Для длинного текста в названии */
+.fixed-columns-table td:nth-child(2) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 0;
+}
+
+/* Анимации для загрузки */
+.loader-fade {
+  animation: fadeOpacity 0.3s ease;
+}
+
+@keyframes fadeOpacity {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.opacity-low {
+  opacity: 0.3;
+  transition: opacity 0.2s ease;
+}
+
+.opacity-full {
+  opacity: 1;
+  transition: opacity 0.2s ease;
+}
+
+.content-blur {
+  filter: blur(1px);
+  transition: filter 0.2s ease;
+}

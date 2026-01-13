@@ -64,6 +64,7 @@ export default function SimplePagination({
           className="btn btn-outline-secondary me-2"
           onClick={goToPrevPage}
           disabled={pagination.currentPage === 1}
+          aria-label="Previous page"
         >
           <i className="bi bi-caret-left"></i>
         </button>
@@ -74,6 +75,7 @@ export default function SimplePagination({
           className="btn btn-outline-secondary ms-2"
           onClick={goToNextPage}
           disabled={pagination.currentPage === totalPages}
+          aria-label="Next page"
         >
           <i className="bi bi-caret-right"></i>
         </button>
@@ -91,6 +93,7 @@ export default function SimplePagination({
           className="btn btn-outline-secondary ms-2"
           onClick={goToSpecificPage}
           disabled={!pageInput}
+          aria-label="Go to page"
         >
           <i className="bi bi-arrow-right"></i>
         </button>
