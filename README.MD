@@ -13,23 +13,24 @@
 ## Технологический стек
 
 ### Backend
-- Python 3.11
-- Django 4.2 + Django REST Framework
-- PostgreSQL
-- Gunicorn
-- Django Filter для фильтрации
-- Poetry для управления зависимостями
+- `Python 3.11`
+- `Django 4.2 + Django REST Framework`
+- `PostgreSQL`
+- `Gunicorn`
+- `Django Filter` для фильтрации
+- `Poetry` для управления зависимостями
+- `Pytest` для тестирования
 
 ### Frontend
-- React 18
-- Axios для HTTP-запросов
-- Bootstrap 5 для стилизации
-- React Hooks для управления состоянием
+- `React 18`
+- `Axios` для HTTP-запросов
+- `Bootstrap 5` для стилизации
+- `React Hooks` для управления состоянием
+- `Jest + React Testing Library` для тестирования
 
 ### Инфраструктура
-- Docker + Docker Compose
-- Nginx для проксирования
-- Pytest для тестирования (покрытие 95%)
+- `Docker + Docker Compose`
+- `Nginx` для проксирования
 
 ## Структура проекта
 ```
@@ -41,7 +42,7 @@ Diploma/
 │ ├── serializers.py # Сериализаторы
 │ ├── filters.py # Фильтры для API
 │ ├── pagination.py # Настройки пагинации
-│ ├── tests/ # Тесты (95% покрытия)
+│ ├── tests/ # Тесты backend
 │ └── management/ # Команды для заполнения данных
 ├── frontend/ # React приложение
 │ ├── src/
@@ -86,7 +87,7 @@ docker-compose down
 
 При первом запуске база данных автоматически заполняется 50 тестовыми записями. Для повторного заполнения выполните:
 
-```bash
+```
 docker-compose exec backend python manage.py autofilling --count 100 --clear
 ```
 Опции команды:
@@ -158,8 +159,9 @@ GET /spa/table/?ordering=-name
 GET /spa/table/?name__icontains=экспедиция&quantity__gt=3&ordering=distance&page=1&page_size=5
 ```
 ## Тестирование
-
-### Запуск тестов
+Проект имеет комплексную систему тестирования как backend, так и frontend частей.
+### Backend тестирование
+#### Запуск тестов
 ```
 # Запуск всех тестов с отчетом о покрытии
 docker-compose exec backend pytest
@@ -173,14 +175,56 @@ docker-compose exec backend pytest -v
 # Генерация HTML отчета о покрытии
 docker-compose exec backend pytest --cov-report=html
 ```
-### Структура тестов
+#### Структура тестов
 - `test_models.py` - тесты моделей и CRUD операций
 - `test_views.py` - тесты API эндпоинтов
 - `test_filters.py` - тесты фильтрации
 - `test_serializers.py` - тесты сериализаторов
 - `test_pagination.py` - тесты пагинации
-### Покрытие кода
+#### Покрытие кода
 Текущее покрытие тестами составляет 95%. Отчет доступен после запуска тестов в директории `htmlcov/`.
+
+### Frontend тестирование
+#### Запуск тестов
+```
+# Перейдите в директорию frontend
+cd frontend
+
+# Установите зависимости
+npm install
+
+# Запустите тесты
+npm test
+
+# Для отчета о покрытии
+npm test -- --coverage --watchAll=false
+````
+#### Структура тестов
+
+* `App.test.js` - тесты главного компонента
+
+* `components/Table/*.test.js` - тесты компонентов таблицы
+
+* `components/Filters/*.test.js` - тесты компонентов фильтров
+
+* `components/Pagination/*.test.js` - тесты пагинации
+
+* `utils/*.test.js` - тесты утилит
+
+#### Покрытие кода
+Текущее покрытие тестами frontend составляет 76%. Ключевые компоненты имеют высокое покрытие:
+
+* Компоненты таблицы: 100%
+
+* Утилиты: 100%
+
+* Компоненты фильтров: 86%
+
+* Пагинация: 96%
+
+* Главный компонент App: 61%
+
+Отчет доступен после запуска тестов в директории `frontend/coverage/lcov-report/`.
 
 ## Архитектурные решения
 
@@ -225,7 +269,7 @@ poetry run python manage.py autofilling --count 20
 # Запуск сервера разработки
 poetry run python manage.py runserver
 ```
-#### Backend
+#### Frontend
 ```
 cd Diploma/frontend
 

@@ -13,10 +13,11 @@ export default function CustomTable({
 
   return (
     <>
-      <table className="table table-dark table-striped text-center">
+    <div className="rounded-4 overflow-hidden border">
+      <table className="table table-light table-striped text-center fixed-columns-table rounded-4">
         <thead>
           <tr>
-            <th scope="col">Дата</th>
+            <th scope="col" className="align-middle">Дата начала</th>
             <SortableHeader
               field="name"
               label="Название"
@@ -25,13 +26,13 @@ export default function CustomTable({
             />
             <SortableHeader
               field="quantity"
-              label="Количество"
+              label="Количество дней"
               sortConfig={sortConfig}
               onSortClick={onSortClick}
             />
             <SortableHeader
               field="distance"
-              label="Расстояние"
+              label="Расстояние, км"
               sortConfig={sortConfig}
               onSortClick={onSortClick}
             />
@@ -48,6 +49,7 @@ export default function CustomTable({
           ))}
         </tbody>
       </table>
+      </div>
 
       <SimplePagination
         pagination={pagination}

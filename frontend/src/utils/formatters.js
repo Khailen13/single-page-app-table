@@ -17,6 +17,10 @@ export default function formatDate(dateString) {
     }
 
     if (!date) {
+      if (dateString.length <= 5 && /^\d+$/.test(dateString)) {
+        console.warn('Невалидная дата:', dateString);
+        return "—";
+      }
       date = new Date(dateString);
     }
 

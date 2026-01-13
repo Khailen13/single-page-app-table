@@ -1,9 +1,8 @@
-import logo from "./logo.svg";
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 import api from "./utils/api";
 import SimplePagination from "./components/Pagination/SimplePagination.js";
@@ -13,6 +12,7 @@ import CustomTable from "./components/Table/CustomTable.js";
 function App() {
   const [serverData, setServerData] = useState({ results: [], count: 0 });
   const [isLoading, setIsLoading] = useState(false);
+  const [showLoader, setShowLoader] = useState(false);
   const [error, setError] = useState(null);
 
   const [sortConfig, setSortConfig] = useState({
@@ -31,8 +31,10 @@ function App() {
   });
   const [pagination, setPagination] = useState({
     currentPage: 1,
-    itemsPerPage: 5,
+    itemsPerPage: 15,
   });
+
+  const loaderTimerRef = useRef(null);
 
   const getDjangoFilterParams = (filters) => {
     if (!filters.column || !filters.condition || !filters.value) {
@@ -61,6 +63,14 @@ function App() {
     setIsLoading(true);
     setError(null);
 
+    if (loaderTimerRef.current) {
+      clearTimeout(loaderTimerRef.current);
+    }
+
+    loaderTimerRef.current = setTimeout(() => {
+      setShowLoader(true);
+    }, 300);
+
     try {
       const params = {
         page: pagination.currentPage,
@@ -77,22 +87,19 @@ function App() {
       const filterParams = getDjangoFilterParams(appliedFilters);
       Object.assign(params, filterParams);
 
-      const fullUrl = `http://localhost/spa/table/?${new URLSearchParams(params).toString()}`;
-      console.log("Пробую загрузить данные по адресу:", fullUrl);
-
       const response = await api.get("/table/", { params });
-      console.log("Ответ от сервера:", response.data);
       setServerData(response.data);
     } catch (err) {
-      console.error("Полная информация об ошибке:", {
-        message: err.message,
-        response: err.response,
-        request: err.request,
-        config: err.config,
-      });
+      console.error("Ошибка:", err);
       setError(err.message || "Произошла ошибка при загрузке данных");
     } finally {
+      if (loaderTimerRef.current) {
+        clearTimeout(loaderTimerRef.current);
+        loaderTimerRef.current = null;
+      }
+
       setIsLoading(false);
+      setShowLoader(false);
     }
   };
 
@@ -104,6 +111,14 @@ function App() {
     sortConfig,
     appliedFilters,
   ]);
+
+  useEffect(() => {
+    return () => {
+      if (loaderTimerRef.current) {
+        clearTimeout(loaderTimerRef.current);
+      }
+    };
+  }, []);
 
   const resetPagination = () => {
     setPagination((prev) => ({ ...prev, currentPage: 1 }));
@@ -137,52 +152,76 @@ function App() {
     resetPagination();
   };
 
-  useEffect(() => {
-    fetchTableData();
-  }, []);
-
   return (
-    <div className="container mt-4">
-      <h2 className="text-center mb-3"> Туристические экспедиции </h2>
-      {isLoading && (
-        <div className="text-center my-4">
-          <div className="spinner-border text-primary" role="status">
-            <span className="visually-hidden">Загрузка...</span>
+    <div className="bg-gradient bg-light min-vh-100 py-5">
+      <div className="container">
+        <div className="card shadow-lg border-0 rounded-4 overflow-hidden">
+          <div className="card-header bg-success bg-gradient text-white py-3">
+            <h2 className="text-center mb-0">
+              <i className="bi bi-compass me-2"></i>
+              Туристические экспедиции
+            </h2>
+          </div>
+
+          <div className="card-body p-4 position-relative">
+            {showLoader && (
+  <div className="text-center my-5 loader-fade position-absolute top-50 start-50 translate-middle">
+    <div
+      className="spinner-border text-primary"
+      role="status"
+      style={{width: '3rem', height: '3rem'}}
+    >
+      <span className="visually-hidden">Загрузка...</span>
+    </div>
+    <p className="mt-2 text-muted small">Загрузка данных...</p>
+  </div>
+)}
+
+            <div className={showLoader ? 'content-blur' : ''}>
+              {error && (
+                <div className="alert alert-danger alert-dismissible fade show" role="alert">
+                  <div className="d-flex justify-content-between align-items-center">
+                    <span>
+                      <i className="bi bi-exclamation-triangle me-2"></i>
+                      {error}
+                    </span>
+                    <button
+                      type="button"
+                      className="btn-close"
+                      onClick={() => setError(null)}
+                    ></button>
+                  </div>
+                </div>
+              )}
+
+              <FilterPanel
+                filters={tempFilters}
+                setFilters={setTempFilters}
+                onApply={handleApplyFilters}
+                onClear={handleClearFilters}
+              />
+
+              <div className={showLoader ? 'opacity-low' : 'opacity-full'}>
+                {!error && (
+                  <CustomTable
+                    data={serverData.results}
+                    pagination={pagination}
+                    setPagination={setPagination}
+                    onSortClick={handleSort}
+                    totalItems={serverData.count}
+                    sortConfig={sortConfig}
+                  />
+                )}
+              </div>
+            </div>
+          </div>
+
+          <div className="card-footer bg-success py-3 text-center text-white small">
+            <i className="bi bi-info-circle me-1"></i>
+            Используйте фильтры для поиска нужных экспедиций
           </div>
         </div>
-      )}
-
-      {error && (
-        <div
-          className="alert alert-danger alert-dismissible fade show"
-          role="alert"
-        >
-          {error}
-          <button
-            type="button"
-            className="btn-close"
-            onClick={() => setError(null)}
-          ></button>
-        </div>
-      )}
-
-      <FilterPanel
-        filters={tempFilters}
-        setFilters={setTempFilters}
-        onApply={handleApplyFilters}
-        onClear={handleClearFilters}
-      />
-
-      {!isLoading && !error && (
-        <CustomTable
-          data={serverData.results}
-          pagination={pagination}
-          setPagination={setPagination}
-          onSortClick={handleSort}
-          totalItems={serverData.count}
-          sortConfig={sortConfig}
-        />
-      )}
+      </div>
     </div>
   );
 }
