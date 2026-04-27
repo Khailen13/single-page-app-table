@@ -1,0 +1,15 @@
+{
+  "short_name": "SPA Table",
+  "name": "Таблица SPA - Дипломный проект",
+  "icons": [
+    {
+      "src": "table.svg",
+      "sizes": "32x32 64x64",
+      "type": "image/svg+xml"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}
