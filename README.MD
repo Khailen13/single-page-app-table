@@ -34,7 +34,7 @@
 
 ## Структура проекта
 ```
-Diploma/
+.
 ├── config/ # Настройки Django
 ├── spa/ # Основное Django приложение
 │ ├── models.py # Модель TableRow
@@ -67,7 +67,7 @@ Diploma/
 
 ### 1. Клонирование репозитория
 ```
-git clone https://github.com/Khailen13/Diploma.git
+git clone https://github.com/Khailen13/single-page-app-table.git
 cd Diploma
 ```
 ### 2. Настройка окружения
